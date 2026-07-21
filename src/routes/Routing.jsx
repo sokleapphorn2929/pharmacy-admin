@@ -9,7 +9,7 @@ export default function Routing() {
         <Routes>
             <Route path='/' element={<Navigate to="/login" replace/>}/>
             <Route index path='/login' element={<Login/>}/>
-            <Route path='/testing' element={<TestingApi/>}/>
+            {/* <Route path='/testing' element={<TestingApi/>}/> */}
         </Routes>
     </BrowserRouter>
   )
