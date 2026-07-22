@@ -5,7 +5,7 @@ const axiosAdmin = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 10000, //it's mean 10s
+    // timeout: 10000, //it's mean 10s
 })
 
 // concept of request API
@@ -25,7 +25,7 @@ axiosAdmin.interceptors.request.use(
 
 // concept of response API
 axiosAdmin.interceptors.response.use(
-    (response) => response.data.data,
+    (response) => response.data,
     (error) => {
         if(error.response && error.response.status === 401) {
             localStorage.removeItem("token");

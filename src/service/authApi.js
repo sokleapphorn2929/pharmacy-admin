@@ -1,15 +1,17 @@
 import axiosAdmin from "./axiosAdmin"
 
 const authApi = {
-    login: async(credential) => {
-        return await axiosAdmin.post("/adimins/login", credential);
+    loginAdmin: async(credential) => {
+        return await axiosAdmin.post("/admins/login", credential);
     },
 
-    register: async (adminData) => {
+    registerAdmin: async (adminData) => {
         return await axiosAdmin.post("/admins", adminData)
     },
 
-    logout: async () => {
+    logoutAdmin: async () => {
         return await axiosAdmin.post("/admins/logout")
     }
 }
+
+export default authApi;
