@@ -30,7 +30,7 @@ export default function Login() {
     try {
       const rsp = await authApi.loginAdmin(adminData);
       localStorage.setItem("token", rsp.access_token);
-      alert("Login to Admin Successfull");
+      navigate("/admin/dashboard");
     } catch (error) {
       console.log(error);
       setLoginStatus(true);
