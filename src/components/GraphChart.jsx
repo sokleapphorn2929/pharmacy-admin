@@ -66,7 +66,7 @@ export default function RevenueBarChart() {
     },
   };
   return (
-    <div className="w-full md:h-[58vh] h-[54vh] bg-white dark:bg-slate-900 rounded-lg outline-2 dark:outline-slate-700 outline-gray-300 overflow-hidden duration-300 md:p-5 p-1">
+    <div className="w-full md:h-[58.5vh] h-[54.5vh] bg-white dark:bg-slate-900 rounded-lg outline-2 dark:outline-slate-700 outline-gray-300 overflow-hidden duration-300 md:p-5 p-1">
       <h2 className="text-lg font-bold mb-4 text-gray-800 dark:text-white text-center">
         Weekly Sold Items
       </h2>
