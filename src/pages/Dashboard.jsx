@@ -1,9 +1,12 @@
 import React from 'react'
+import Aside from '../components/Aside'
+import CountSection from '../components/CountSection'
 
 export default function Dashboard() {
   return (
-    <div className='py-20 px-10 w-full h-screen '>
-      <h1>Wellcome to Dashboard</h1>
+    <div className='pt-20 pb-5 px-5 w-full h-screen flex'>
+      <Aside/>
+      <CountSection/>
     </div>
   )
 }

@@ -38,12 +38,12 @@ export default function Navbar() {
           <div className="">
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="w-9 h-9 flex items-center justify-center bg-gray-100 dark:bg-slate-800 outline-2 outline-gray-300 dark:outline-slate-700 rounded-md"
+              className="w-9 h-9 flex items-center justify-center bg-gray-100 dark:bg-slate-800 outline-2 outline-gray-300 dark:outline-slate-700 rounded-md duration-300"
             >
               {darkMode ? (
-                <Sun className="text-white hover:text-yellow-500 duration-300" />
+                <Sun className="text-white duration-300" />
               ) : (
-                <Moon className="text-black hover:text-yellow-500 duration-300" />
+                <Moon className="text-black duration-300" />
               )}
             </button>
           </div>
