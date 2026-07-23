@@ -5,6 +5,7 @@ import TestingApi from '../pages/TestingApi'
 import RootLayout from '../layout/RootLayout'
 import Dashboard from '../pages/Dashboard'
 import AdminLayout from '../layout/AdminLayout'
+import Category from '../pages/Category'
 
 export default function Routing() {
   return (
@@ -16,6 +17,7 @@ export default function Routing() {
             <Route path='/admin' element={<RootLayout/>}>
               <Route element={<AdminLayout/>}>
                 <Route path='dashboard' element={<Dashboard/>}/>
+                <Route path='category' element={<Category/>}/>
               </Route>
             </Route>
         </Routes>
