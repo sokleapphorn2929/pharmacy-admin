@@ -4,7 +4,7 @@ import CountSection from '../components/CountSection'
 
 export default function Dashboard() {
   return (
-    <div className='pt-20 pb-5 px-5 w-full h-screen flex'>
+    <div className='pt-20 pb-5 px-5 w-full h-screen flex md:gap-5 gap-3'>
       <Aside/>
       <CountSection/>
     </div>
