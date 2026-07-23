@@ -4,6 +4,7 @@ import Login from '../pages/Login'
 import TestingApi from '../pages/TestingApi'
 import RootLayout from '../layout/RootLayout'
 import Dashboard from '../pages/Dashboard'
+import AdminLayout from '../layout/AdminLayout'
 
 export default function Routing() {
   return (
@@ -13,7 +14,9 @@ export default function Routing() {
             <Route index path='/login' element={<Login/>}/>
             {/* <Route path='/testing' element={<TestingApi/>}/> */}
             <Route path='/admin' element={<RootLayout/>}>
-              <Route path='dashboard' element={<Dashboard/>}/>
+              <Route element={<AdminLayout/>}>
+                <Route path='dashboard' element={<Dashboard/>}/>
+              </Route>
             </Route>
         </Routes>
     </BrowserRouter>

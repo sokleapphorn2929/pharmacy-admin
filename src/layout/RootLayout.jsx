@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 export default function RootLayout() {
   return (
-    <div className="app-container text-black dark:text-white bg-gray-100 dark:bg-slate-900 duration-300">
+    <div className="app-container text-slate-800 dark:text-white bg-gray-100 dark:bg-slate-900 duration-300">
       <Navbar />
 
       <main className="content">
