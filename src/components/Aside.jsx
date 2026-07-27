@@ -14,10 +14,10 @@ export default function Aside() {
           <ChartBarStacked/>
           <div className="font-extrabold cursor-pointer hidden md:block">CATEGORY</div>
         </Link>
-        <div className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
+        <Link to="/admin/brand" className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
           <Dices />
           <div className="font-extrabold cursor-pointer hidden md:block">BRAND</div>
-        </div>
+        </Link>
         <div className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
           <PackageSearch />
           <div className="font-extrabold cursor-pointer hidden md:block">PRODUCT</div>

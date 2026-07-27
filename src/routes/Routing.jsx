@@ -6,6 +6,7 @@ import RootLayout from '../layout/RootLayout'
 import Dashboard from '../pages/Dashboard'
 import AdminLayout from '../layout/AdminLayout'
 import Category from '../pages/Category'
+import Brand from '../pages/Brand'
 
 export default function Routing() {
   return (
@@ -18,6 +19,7 @@ export default function Routing() {
               <Route element={<AdminLayout/>}>
                 <Route path='dashboard' element={<Dashboard/>}/>
                 <Route path='category' element={<Category/>}/>
+                <Route path='brand' element={<Brand/>}/>
               </Route>
             </Route>
         </Routes>
