@@ -22,10 +22,10 @@ export default function Aside() {
           <PackageSearch />
           <div className="font-extrabold cursor-pointer hidden md:block">PRODUCT</div>
         </Link>
-        <div className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
+        <Link to="/admin/order" className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
           <ShoppingCart />
           <div className="font-extrabold cursor-pointer hidden md:block">ORDER</div>
-        </div>
+        </Link>
         <div className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
           <BottleWine />
           <div className="font-extrabold cursor-pointer hidden md:block">ORDER ITEM</div>

@@ -8,6 +8,7 @@ import AdminLayout from '../layout/AdminLayout'
 import Category from '../pages/Category'
 import Brand from '../pages/Brand'
 import Product from '../pages/Product'
+import Order from '../pages/Order'
 
 export default function Routing() {
   return (
@@ -22,6 +23,7 @@ export default function Routing() {
                 <Route path='category' element={<Category/>}/>
                 <Route path='brand' element={<Brand/>}/>
                 <Route path='product' element={<Product/>}/>
+                <Route path='order' element={<Order/>}/>
               </Route>
             </Route>
         </Routes>

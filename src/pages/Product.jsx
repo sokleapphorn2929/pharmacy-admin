@@ -2,7 +2,7 @@ import { Plus, Pencil, Trash2, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import productApi from "../service/productApi";
 import categoryApi from "../service/categoryApi";
-import brandApi from "../service/brandApi"; // Ensure you have this or fetch accordingly
+import brandApi from "../service/brandApi"; 
 import {
   Dialog,
   DialogBackdrop,
@@ -218,7 +218,7 @@ export default function Product() {
       {/* Header Section */}
       <div className="w-full md:h-16 h-14 flex items-center md:px-5 px-3 border-b-2 border-gray-200 dark:border-slate-800 duration-300 justify-between p-5">
         <div className="md:text-xl font-extrabold text-slate-800 dark:text-white">
-          Product Management
+          Product
         </div>
         <div>
           <input
