@@ -7,6 +7,7 @@ import Dashboard from '../pages/Dashboard'
 import AdminLayout from '../layout/AdminLayout'
 import Category from '../pages/Category'
 import Brand from '../pages/Brand'
+import Product from '../pages/Product'
 
 export default function Routing() {
   return (
@@ -20,6 +21,7 @@ export default function Routing() {
                 <Route path='dashboard' element={<Dashboard/>}/>
                 <Route path='category' element={<Category/>}/>
                 <Route path='brand' element={<Brand/>}/>
+                <Route path='product' element={<Product/>}/>
               </Route>
             </Route>
         </Routes>
