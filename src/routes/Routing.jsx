@@ -9,6 +9,7 @@ import Category from '../pages/Category'
 import Brand from '../pages/Brand'
 import Product from '../pages/Product'
 import Order from '../pages/Order'
+import Payment from '../pages/Payment'
 
 export default function Routing() {
   return (
@@ -24,6 +25,7 @@ export default function Routing() {
                 <Route path='brand' element={<Brand/>}/>
                 <Route path='product' element={<Product/>}/>
                 <Route path='order' element={<Order/>}/>
+                <Route path='payment' element={<Payment/>}/>
               </Route>
             </Route>
         </Routes>
