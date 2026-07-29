@@ -30,10 +30,10 @@ export default function Aside() {
           <DollarSign />
           <div className="font-extrabold cursor-pointer hidden md:block">PAYMENT</div>
         </Link>
-        <div className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
+        <Link to="/admin/invoice" className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
           <Receipt />
           <div className="font-extrabold cursor-pointer hidden md:block">INVOICE</div>
-        </div>
+        </Link>
       </div>
       <div className="flex flex-col md:gap-3 gap-1">
         <div className="cursor-pointer w-full h-10 bg-gray-200 dark:bg-slate-700 rounded-md flex md:px-5 justify-center md:justify-start items-center gap-3 ">
