@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosAdmin = axios.create({
-    baseURL: "https://pharmacy-system-backend-j77b.onrender.com/api",
+    baseURL: import.meta.env.VITE_API_BASE_URL || "https://pharmacy-system-backend-j77b.onrender.com/api",
     headers: {
         'Content-Type': 'application/json',
     },
