@@ -1,8 +1,8 @@
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import productApi from "../service/productApi";
 import categoryApi from "../service/categoryApi";
-import brandApi from "../service/brandApi"; 
+import brandApi from "../service/brandApi";
 import {
   Dialog,
   DialogBackdrop,
@@ -15,6 +15,7 @@ export default function Product() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(""); // 1. Added search term state
 
   // Add Modal State
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -94,10 +95,10 @@ export default function Product() {
       formData.append("product_price", productPrice);
       formData.append("product_discount", productDiscount || 0);
       formData.append("product_status", productStatus);
-      if (productManufacturedDate){
+      if (productManufacturedDate) {
         formData.append("product_manufactured_date", productManufacturedDate);
       }
-      if (productExpiredDate){
+      if (productExpiredDate) {
         formData.append("product_expired_date", productExpiredDate);
       }
 
@@ -109,8 +110,6 @@ export default function Product() {
       }
 
       await productApi.create(formData);
-
-      console.log("Manufactured Date State:", productManufacturedDate);
 
       // Reset form states
       setProductName("");
@@ -205,6 +204,12 @@ export default function Product() {
     }
   };
 
+  // 2. Filter products based on the search input
+  const filteredProducts = products.filter((prod) => {
+    const name = prod.product_name || "";
+    return name.toLowerCase().includes(searchTerm.toLowerCase().trim());
+  });
+
   if (loading) {
     return (
       <div className="w-full h-full flex items-center justify-center font-bold text-lg dark:text-white">
@@ -221,11 +226,16 @@ export default function Product() {
           Product
         </div>
         <div>
-          <input
-            type="text"
-            className="outline-2 rounded-sm md:w-96 w-40 md:h-9 h-8 bg-gray-100 dark:bg-slate-800 outline-gray-300 dark:outline-slate-700 duration-300 md:px-5 px-2 text-slate-800 dark:text-white"
-            placeholder="Search product..."
-          />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)} // 3. Bind search state
+              className="outline-2 rounded-sm md:w-96 w-40 md:h-9 h-8 bg-gray-100 dark:bg-slate-800 outline-gray-300 dark:outline-slate-700 duration-300 pl-9 pr-3 text-slate-800 dark:text-white text-xs md:text-sm"
+              placeholder="Search product..."
+            />
+          </div>
         </div>
         <div>
           <button
@@ -239,7 +249,7 @@ export default function Product() {
       </div>
 
       {/* Table Section */}
-      <div className="md:w-full w-72 overflow-x-auto p-3 md:p-5">
+      <div className="md:w-full w-72 overflow-x-auto p-3 md:p-5 flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b-2 border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400 text-sm md:text-base">
@@ -252,54 +262,90 @@ export default function Product() {
             </tr>
           </thead>
           <tbody>
-            {products.map((prod, index) => (
-              <tr
-                key={prod.id || index}
-                className="border-b border-gray-100 dark:border-slate-800/60 hover:bg-gray-50 dark:hover:bg-slate-800/50 duration-200"
-              >
-                <td className="py-3 px-4 font-semibold text-slate-700 dark:text-slate-300">
-                  {`#${index + 1}`}
-                </td>
-                <td className="py-3 px-4">
-                  <img
-                    src={prod.product_pic}
-                    alt={prod.product_name}
-                    className="w-10 h-10 rounded-md object-cover outline outline-gray-300 dark:outline-slate-700"
-                  />
-                </td>
-                <td className="py-3 px-4 font-bold text-slate-800 dark:text-white">
-                  {prod.product_name}
-                </td>
-                <td className="py-3 px-4 font-medium text-slate-700 dark:text-slate-300">
-                  ${prod.product_price}
-                </td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-2 py-1 rounded text-xs font-semibold ${prod.product_status === "available" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                  >
-                    {prod.product_status}
-                  </span>
-                </td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      onClick={() => handleOpenUpdate(prod)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
-                    >
-                      <Pencil size={16} />
-                      <span className="hidden md:inline">Update</span>
-                    </button>
-                    <button
-                      onClick={() => handleOpenDelete(prod)}
-                      className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
-                    >
-                      <Trash2 size={16} />
-                      <span className="hidden md:inline">Delete</span>
-                    </button>
-                  </div>
+            {filteredProducts.length === 0 ? (
+              <tr>
+                <td
+                  colSpan="6"
+                  className="text-center py-8 text-gray-400 dark:text-gray-500 font-semibold"
+                >
+                  No products found.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredProducts.map((prod) => {
+                // Find the permanent index from the main products array to keep numbering locked
+                const originalIndex = products.indexOf(prod);
+
+                return (
+                  <tr
+                    key={prod.id || originalIndex}
+                    className="border-b border-gray-100 dark:border-slate-800/60 hover:bg-gray-50 dark:hover:bg-slate-800/50 duration-200"
+                  >
+                    <td className="py-3 px-4 font-semibold text-slate-700 dark:text-slate-300">
+                      {`#${originalIndex + 1}`}
+                    </td>
+                    <td className="py-3 px-4">
+                      <img
+                        src={prod.product_pic}
+                        alt={prod.product_name}
+                        className="w-10 h-10 rounded-md object-cover outline outline-gray-300 dark:outline-slate-700"
+                      />
+                    </td>
+                    <td className="py-3 px-4 font-bold text-slate-800 dark:text-white">
+                      {prod.product_name}
+                    </td>
+                    <td className="py-3 px-4 font-medium text-slate-700 dark:text-slate-300">
+                      {prod.product_discount > 0 ? (
+                        <div className="flex flex-col">
+                          {/* Original Base Price (Crossed Out) */}
+                          <span className="text-xs text-slate-400 line-through">
+                            ${prod.product_price}
+                          </span>
+
+                          {/* Final Discounted Price */}
+                          <span className="text-emerald-600 font-semibold">
+                            ${prod.product_final_price}
+                          </span>
+
+                          {/* Note Point showing the active discount */}
+                          <span className="text-[10px] text-amber-500 font-medium">
+                            ({prod.product_discount}% OFF)
+                          </span>
+                        </div>
+                      ) : (
+                        /* Regular price displayed normally when there is no discount */
+                        <span>${prod.product_price}</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-semibold ${prod.product_status === "available" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                      >
+                        {prod.product_status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleOpenUpdate(prod)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
+                        >
+                          <Pencil size={16} />
+                          <span className="hidden md:inline">Update</span>
+                        </button>
+                        <button
+                          onClick={() => handleOpenDelete(prod)}
+                          className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
+                        >
+                          <Trash2 size={16} />
+                          <span className="hidden md:inline">Delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
@@ -721,7 +767,7 @@ export default function Product() {
               <button
                 type="button"
                 onClick={() => setIsDeleteOpen(false)}
-                className="px-4 py-2 rounded-md font-semibold bg-gray-200 dark:bg-slate-700 text-slate-800 dark:text-white hover:bg-gray-300 cursor-pointer"
+                className="px-4 py-2 rounded-md font-semibold bg-gray-200 dark:bg-slate-700 text-slate-800 dark:text-white hover:bg-gray-300 duration-200 cursor-pointer"
               >
                 Cancel
               </button>
@@ -729,7 +775,7 @@ export default function Product() {
                 type="button"
                 disabled={submitting}
                 onClick={handleDeleteConfirm}
-                className="px-4 py-2 rounded-md font-semibold bg-red-500 hover:bg-red-600 text-white disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 rounded-md font-semibold bg-red-500 hover:bg-red-600 text-white duration-200 disabled:opacity-50 cursor-pointer"
               >
                 {submitting ? "Deleting..." : "Delete Product"}
               </button>

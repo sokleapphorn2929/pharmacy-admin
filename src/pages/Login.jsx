@@ -29,10 +29,25 @@ export default function Login() {
 
     try {
       const rsp = await authApi.loginAdmin(adminData);
-      localStorage.setItem("token", rsp.access_token);
-      navigate("/admin/dashboard");
+      console.log("FULL BACKEND RESPONSE:", rsp);
+
+      // Safe fallback checks for different response structures
+      const data = rsp?.data || rsp;
+      const token = data?.access_token || data?.token;
+      const adminInfo = data?.admin;
+
+      if (!token) {
+        console.error("Token is missing from response object:", rsp);
+        setLoginStatus(true);
+        return;
+      }
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("adminData", JSON.stringify(adminInfo));
+
+      navigate("/admin/dashboard", { replace: true });
     } catch (error) {
-      console.log(error);
+      console.error("Login request failed:", error);
       setLoginStatus(true);
     } finally {
       setLoading(false);

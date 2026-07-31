@@ -90,7 +90,7 @@ export default function Invoice() {
         }),
       );
 
-      // 4. Build the HTML string matching the user-side format precisely with product names
+      // 4. Build the HTML string matching the user-side format precisely with product names & discounts
       const htmlContent = `
       <html>
         <head>
@@ -103,6 +103,7 @@ export default function Invoice() {
             table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
             th { background-color: #f8fafc; text-align: left; padding: 12px; font-size: 12px; text-transform: uppercase; color: #64748b; border-bottom: 2px solid #e2e8f0; }
             td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+            .discount-text { font-size: 11px; color: #16a34a; margin-top: 2px; }
             .total { text-align: right; font-size: 18px; font-weight: bold; margin-top: 20px; }
           </style>
         </head>
@@ -135,16 +136,24 @@ export default function Invoice() {
               ${
                 itemsWithProductNames.length > 0
                   ? itemsWithProductNames
-                      .map(
-                        (item) => `
+                      .map((item) => {
+                        const price = parseFloat(item.price || 0);
+                        const discount = parseFloat(item.discount || 0);
+                        const qty = parseInt(item.qty || 1);
+                        const lineTotal = item.total_price !== undefined ? parseFloat(item.total_price) : (price - discount) * qty;
+
+                        return `
                       <tr>
-                        <td>${item.resolved_product_name}</td>
-                        <td>${item.qty}</td>
-                        <td style="text-align: right;">$${parseFloat(item.price).toFixed(2)}</td>
-                        <td style="text-align: right;">$${(parseFloat(item.price) * parseInt(item.qty)).toFixed(2)}</td>
+                        <td>
+                          ${item.resolved_product_name}
+                          ${discount > 0 ? `<div class="discount-text">Saved $${discount.toFixed(2)} per item</div>` : ''}
+                        </td>
+                        <td>${qty}</td>
+                        <td style="text-align: right;">$${price.toFixed(2)}</td>
+                        <td style="text-align: right;">$${lineTotal.toFixed(2)}</td>
                       </tr>
-                    `,
-                      )
+                    `;
+                      })
                       .join("")
                   : '<tr><td colspan="4">No items found for this order</td></tr>'
               }
@@ -158,8 +167,13 @@ export default function Invoice() {
           <div class="total">
             Grand Total: $${(
               (itemsWithProductNames.reduce(
-                (sum, item) =>
-                  sum + parseFloat(item.price) * parseInt(item.qty),
+                (sum, item) => {
+                  const price = parseFloat(item.price || 0);
+                  const discount = parseFloat(item.discount || 0);
+                  const qty = parseInt(item.qty || 1);
+                  const lineTotal = item.total_price !== undefined ? parseFloat(item.total_price) : (price - discount) * qty;
+                  return sum + lineTotal;
+                },
                 0,
               ) || 0) + 1
             ).toFixed(2)}

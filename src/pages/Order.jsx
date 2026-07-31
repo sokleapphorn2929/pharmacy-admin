@@ -9,7 +9,9 @@ export default function Order() {
   const fetchOrders = async () => {
     try {
       const response = await orderApi.getAll();
-      const rawData = Array.isArray(response) ? response : response.data || response.orders || [];
+      const rawData = Array.isArray(response)
+        ? response
+        : response.data || response.orders || [];
       setOrders(rawData);
       setLoading(false);
     } catch (error) {
@@ -26,15 +28,20 @@ export default function Order() {
   const filteredOrders = orders.filter((order) => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase().trim();
-    
+
     const orderId = String(order.id || order._id || "").toLowerCase();
-    const cleanSearchTerm = searchLower.startsWith('#') ? searchLower.slice(1) : searchLower;
+    const cleanSearchTerm = searchLower.startsWith("#")
+      ? searchLower.slice(1)
+      : searchLower;
     const matchesId = orderId.includes(cleanSearchTerm);
 
-    const matchesProduct = order.order_items && Array.isArray(order.order_items) && order.order_items.some((item) => {
-      const productName = item.products?.product_name || "";
-      return productName.toLowerCase().includes(searchLower);
-    });
+    const matchesProduct =
+      order.order_items &&
+      Array.isArray(order.order_items) &&
+      order.order_items.some((item) => {
+        const productName = item.products?.product_name || "";
+        return productName.toLowerCase().includes(searchLower);
+      });
 
     return matchesId || matchesProduct;
   });
@@ -78,12 +85,12 @@ export default function Order() {
             const orderStatus = order.order_status || "pending";
             const items = order.order_items || [];
 
-            // Calculate order items subtotal + fixed $1.00 delivery fee
             const itemsSubtotal = items.reduce((sum, item) => {
-              const itemTotal = item.qty * item.price - (item.discount || 0);
+              const itemTotal = Number(item.total_price) || 0;
               return sum + itemTotal;
             }, 0);
-            const deliveryFee = 1.00;
+
+            const deliveryFee = 1.0;
             const orderGrandTotal = itemsSubtotal + deliveryFee;
 
             return (
@@ -116,8 +123,11 @@ export default function Order() {
 
                   <div className="space-y-2">
                     {items.map((item, idx) => {
-                      const productName = item.products?.product_name || "Unknown Product";
-                      const itemTotal = (item.qty * item.price - (item.discount || 0)).toFixed(2);
+                      const productName =
+                        item.products?.product_name || "Unknown Product";
+                      const itemTotal = Number(item.total_price || 0).toFixed(
+                        2,
+                      );
 
                       return (
                         <div
@@ -151,10 +161,16 @@ export default function Order() {
                 {/* Delivery Fee & Total Footer */}
                 <div className="pt-3 border-t border-gray-200 dark:border-slate-700 space-y-1.5 text-right">
                   <div className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium">
-                    Delivery Fee: <span className="font-bold text-slate-700 dark:text-slate-300">${deliveryFee.toFixed(2)}</span>
+                    Delivery Fee:{" "}
+                    <span className="font-bold text-slate-700 dark:text-slate-300">
+                      ${deliveryFee.toFixed(2)}
+                    </span>
                   </div>
                   <div className="text-base md:text-lg font-extrabold text-slate-900 dark:text-white">
-                    Total: <span className="text-blue-600 dark:text-blue-400">${orderGrandTotal.toFixed(2)}</span>
+                    Total:{" "}
+                    <span className="text-blue-600 dark:text-blue-400">
+                      ${orderGrandTotal.toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>

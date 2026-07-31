@@ -1,4 +1,4 @@
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import categoryApi from "../service/categoryApi";
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
@@ -6,6 +6,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 export default function Category() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState(""); // 1. Added search term state
 
   // Add Modal State
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -121,6 +122,12 @@ export default function Category() {
     }
   };
 
+  // 2. Filter categories based on the search input
+  const filteredCategories = categories.filter((cate) => {
+    const name = cate.category_name || "";
+    return name.toLowerCase().includes(searchTerm.toLowerCase().trim());
+  });
+
   if (loading) {
     return (
       <div className="w-full h-full flex items-center justify-center font-bold text-lg dark:text-white">
@@ -137,11 +144,16 @@ export default function Category() {
           Category
         </div>
         <div>
-          <input
-            type="text"
-            className="outline-2 rounded-sm md:w-96 w-40 md:h-9 h-8 bg-gray-100 dark:bg-slate-800 outline-gray-300 dark:outline-slate-700 duration-300 md:px-5 px-2 text-slate-800 dark:text-white"
-            placeholder="Search category..."
-          />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)} // 3. Bind search state
+              className="outline-2 rounded-sm md:w-96 w-40 md:h-9 h-8 bg-gray-100 dark:bg-slate-800 outline-gray-300 dark:outline-slate-700 duration-300 pl-9 pr-3 text-slate-800 dark:text-white text-xs md:text-sm"
+              placeholder="Search category..."
+            />
+          </div>
         </div>
         <div>
           <button 
@@ -155,7 +167,7 @@ export default function Category() {
       </div>
 
       {/* Table Section */}
-      <div className="md:w-full w-72 overflow-x-auto p-3 md:p-5">
+      <div className="md:w-full w-72 overflow-x-auto p-3 md:p-5 flex-1">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b-2 border-gray-200 dark:border-slate-800 text-gray-500 dark:text-gray-400 text-sm md:text-base">
@@ -166,47 +178,55 @@ export default function Category() {
             </tr>
           </thead>
           <tbody>
-            {categories.map((cate, index) => (
-              <tr
-                key={cate.id || index}
-                className="border-b border-gray-100 dark:border-slate-800/60 hover:bg-gray-50 dark:hover:bg-slate-800/50 duration-200"
-              >
-                <td className="py-3 px-4 font-semibold text-slate-700 dark:text-slate-300">
-                  {`#${index + 1}`}
-                </td>
-                <td className="py-3 px-4">
-                  <img
-                    src={cate.category_pic}
-                    alt={cate.category_name}
-                    className="w-10 h-10 rounded-md object-cover outline outline-gray-300 dark:outline-slate-700"
-                  />
-                </td>
-                <td className="py-3 px-4 font-bold text-slate-800 dark:text-white">
-                  {cate.category_name}
-                </td>
-                <td className="py-3 px-4">
-                  <div className="flex items-center justify-center gap-2">
-                    {/* Update Button */}
-                    <button 
-                      onClick={() => handleOpenUpdate(cate)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
-                    >
-                      <Pencil size={16} />
-                      <span className="hidden md:inline">Update</span>
-                    </button>
-
-                    {/* Delete Button */}
-                    <button 
-                      onClick={() => handleOpenDelete(cate)}
-                      className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
-                    >
-                      <Trash2 size={16} />
-                      <span className="hidden md:inline">Delete</span>
-                    </button>
-                  </div>
+            {filteredCategories.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center py-8 text-gray-400 dark:text-gray-500 font-semibold">
+                  No categories found.
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredCategories.map((cate, index) => (
+                <tr
+                  key={cate.id || index}
+                  className="border-b border-gray-100 dark:border-slate-800/60 hover:bg-gray-50 dark:hover:bg-slate-800/50 duration-200"
+                >
+                  <td className="py-3 px-4 font-semibold text-slate-700 dark:text-slate-300">
+                    {`#${categories.indexOf(cate) + 1}`}
+                  </td>
+                  <td className="py-3 px-4">
+                    <img
+                      src={cate.category_pic}
+                      alt={cate.category_name}
+                      className="w-10 h-10 rounded-md object-cover outline outline-gray-300 dark:outline-slate-700"
+                    />
+                  </td>
+                  <td className="py-3 px-4 font-bold text-slate-800 dark:text-white">
+                    {cate.category_name}
+                  </td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center justify-center gap-2">
+                      {/* Update Button */}
+                      <button 
+                        onClick={() => handleOpenUpdate(cate)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
+                      >
+                        <Pencil size={16} />
+                        <span className="hidden md:inline">Update</span>
+                      </button>
+
+                      {/* Delete Button */}
+                      <button 
+                        onClick={() => handleOpenDelete(cate)}
+                        className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md duration-300 flex items-center gap-1 text-xs md:text-sm font-semibold cursor-pointer"
+                      >
+                        <Trash2 size={16} />
+                        <span className="hidden md:inline">Delete</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
